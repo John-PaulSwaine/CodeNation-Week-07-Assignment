@@ -35,28 +35,95 @@ app.get('/listBooks',
         async (req, res) => {
         try {
             const result = await Book.find({})          // this is to find ALL documents
-//          await Book.find({title : 'Harry Potter and the Chamber of Secrets'}).exec() - this is to find a specific item use parameters and the .exec() suffix after the closing paranthesis
-//          await Book.find({title : '/Potter/i'}).exec() - this is to find things like the parameter ie titles like Potter
-//          await Book.find({title : '/Potter/i'}, null, {skip : 3}).exec() - this is to find like the parameter but skipping the first amount ie titles like Potter skipping the first 3
+//          await Book.find({title : /Potter/i}).exec() - this is to find things like the parameter ie titles like Potter
+//          await Book.find({title : /Potter/i}, null, {skip : 3}).exec() - this is to find like the parameter but skipping the first amount ie titles like Potter skipping the first 3
             res.status(200).json(result)         
         } catch (error) {
             console.log(error)
             const responseMessage = {
-                message: `Failed to locate list of books.`,
-                DBresponse: error
+                message: `Failed to locate list of books.`
             }
             res.status(500).json(responseMessage)
         }
     }
 )
 
-app.get('/book',)           //to find a single book using findOne()
+app.get('/singleBook',
+    async (req, res) => {
+        try {
+            const result = await Book.find({title : req.body.title}).exec()         // this is to find a specific item using the title parameter.
+            res.status(200).json(result)
+        } catch (error) {
+            console.log(error)
+            const responseMessage = {
+                message: `Failed to locate book.`
+            }
+            res.status(418).json(responseMessage)
+        }
+    }
+)
 
-app.put('/updateAuthor',)           //update author using updateOne()
+app.put('/updateAuthor', 
+    async (req, res) => {
+        try {
+            const title = req.body.title;
+            const newAuthor = req.body.author
 
-app.put('/updateGenre',)            //update genre using updateOne()
+            const result = await Book.updateOne(
+                { title }, // Query: Find the book by title
+                { $set: { author: newAuthor } } // Update operation: Set the new author
+            );
+                console.log(result);
+                res.status(200).json({
+                    message: `Successfully updated the author of ${title} to ${newAuthor}.`});
+        } catch (error) {
+            console.error(error);
+            const responseMessage = {
+                message: `Failed to update the author of ${req.body.title}.`
+            };
+            res.status(500).json(responseMessage);
+        }
+    }
+)           // update an author using updateOne()
 
-app.delete('/deletebook',)          //delete a book using deleteOne()
+app.put('/updateGenre', 
+    async (req, res) => {
+        try {
+            const title = req.body.title;
+            const newGenre = req.body.genre
+
+            const result = await Book.updateOne(
+                { title }, // Query: Find the book by title
+                { $set: { genre: newGenre } } // Update operation: Set the new author
+            );
+                console.log(result);
+                res.status(200).json({
+                    message: `Successfully updated the genre of ${title} to ${newGenre}.`});
+        } catch (error) {
+            console.error(error);
+            const responseMessage = {
+                message: `Failed to update the genre of ${req.body.title}.`
+            };
+            res.status(500).json(responseMessage);
+        }
+    }
+)           // update the genre using updateOne()
+
+app.delete('/deletebook',
+    async (req, res) => {
+        try {
+            const result = await Book.deleteOne(
+                
+            )
+        } catch (error) {
+            console.error(error);
+            const responseMessage = {
+                message: `Failed to delete ${req.body.title}.`
+            };
+            res.status(500).json(responseMessage);
+        }
+    }
+)          //delete a book using deleteOne()
 
 
 
