@@ -109,21 +109,25 @@ app.put('/updateGenre',
     }
 )           // update the genre using updateOne()
 
-app.delete('/deletebook',
-    async (req, res) => {
-        try {
-            const result = await Book.deleteOne(
-                
-            )
-        } catch (error) {
-            console.error(error);
-            const responseMessage = {
-                message: `Failed to delete ${req.body.title}.`
-            };
-            res.status(500).json(responseMessage);
-        }
+app.delete('/deleteBook', async (req, res) => {
+    try {
+        console.log(req.body.title)
+        const result = await Book.deleteOne({ title: req.body.title });
+        
+        const responseMessage = {
+            message: `Successfully deleted "${req.body.title}" from the database.`
+        };
+        console.log(result);
+        res.status(200).json(responseMessage);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: `Failed to delete "${req.body.title}".`
+        });
     }
-)          //delete a book using deleteOne()
+});
+          //delete a book using deleteOne()
 
 
 
