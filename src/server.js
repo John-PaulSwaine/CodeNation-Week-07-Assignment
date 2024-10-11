@@ -9,12 +9,14 @@ const singleBook = require('./database/controllers/singleBook')
 const updateAuthor = require('./database/controllers/updateAuthor')
 const updateGenre = require('./database/controllers/updateGenre')
 const deleteBook = require('./database/controllers/deleteOne')
+const deleteAll = require('./database/controllers/deleteAll')
 app.post('/addBook', addOne)
 app.get('/listBooks', listBooks)
 app.get('/singleBook', singleBook)
 app.put('/updateAuthor', updateAuthor)
 app.put('/updateGenre', updateGenre)
 app.delete('/deleteBook', deleteBook);
+app.delete('/deleteAll', deleteAll)
 
 app.get('/health', (req, res) => {
     res.send('API is healthy')
